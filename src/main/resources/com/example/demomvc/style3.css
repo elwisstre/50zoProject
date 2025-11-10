@@ -1,0 +1,14 @@
+
+.toggle-button:selected {
+
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 255, 255, 0.7), 35, 0.7, 0, 0);
+    /* dropshadow( Forma, Color del resplandor (Amarillo fuerte), Radio de Blur, Opacidad, Desplazamiento X, Desplazamiento Y ) */
+}
+
+
+.toggle-button {
+    -fx-border-color: #AAAAAA;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
