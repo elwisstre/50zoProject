@@ -67,7 +67,7 @@
                         </ImageView>
                      </graphic>
                   </ToggleButton>
-                  <ToggleButton fx:id="tglBot2" mnemonicParsing="false" prefHeight="100.0" prefWidth="67.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" stylesheets="@../style3.css" text="2">
+                  <ToggleButton fx:id="tglBot3" mnemonicParsing="false" prefHeight="100.0" prefWidth="67.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" stylesheets="@../style3.css" text="2">
                      <graphic>
                         <ImageView fitHeight="73.0" fitWidth="98.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -83,7 +83,7 @@
                         </ImageView>
                      </graphic>
                   </ToggleButton>
-                  <ToggleButton fx:id="tglBot3" mnemonicParsing="false" prefHeight="64.0" prefWidth="90.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" stylesheets="@../style3.css" text="3">
+                  <ToggleButton fx:id="tglBot2" mnemonicParsing="false" prefHeight="64.0" prefWidth="90.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" stylesheets="@../style3.css" text="3">
                      <graphic>
                         <ImageView fitHeight="54.0" fitWidth="56.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                            <image>

@@ -22,8 +22,22 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public class CincuentazoGameController implements Initializable {
+    // Lista de nombres de caballeros
+    private static final List<String> ELEGANT_NAMES = Arrays.asList(
+            "Edmund", "Alistair", "Bartholomew", "Caspian", "Lucius",
+            "Sterling", "Percival", "Julian", "Maximilian", "Godfrey",
+            "Augustus", "Theodore", "Sebastian", "Valentino", "Cornelius"
+    );
+
+    @FXML private Label lblBotName1;
+    @FXML private Label lblBotName2;
+    @FXML private Label lblBotName3;
     private int numberOfBots;
     private MediaPlayer ambientMusicPlayer;
     @FXML
@@ -90,6 +104,33 @@ public class CincuentazoGameController implements Initializable {
             pauseMenuContainer.setVisible(false);
         }
 
+    }
+    private void assignBotData() {
+        // Obtener una copia de la lista de nombres y mezclarla (shuffle)
+        List<String> shuffledNames = new java.util.ArrayList<>(ELEGANT_NAMES);
+        Collections.shuffle(shuffledNames);
+
+        // Lista de todos los Labels de nombres de bots
+        List<Label> botNameLabels = Arrays.asList(lblBotName1, lblBotName2, lblBotName3);
+
+        // Aseguramos que no intentamos asignar más nombres que bots o espacios disponibles
+        int botsToAssign = Math.min(this.numberOfBots, botNameLabels.size());
+
+        for (int i = 0; i < botsToAssign; i++) {
+            Label nameLabel = botNameLabels.get(i);
+
+            if (nameLabel != null) {
+
+                nameLabel.setText(shuffledNames.get(i));
+            }
+        }
+
+        for (int i = botsToAssign; i < botNameLabels.size(); i++) {
+            Label nameLabel = botNameLabels.get(i);
+            if (nameLabel != null) {
+                nameLabel.setText("Espacio Vacío");
+            }
+        }
     }
     private void startGameTimer() {
         pausedTime = 0;
@@ -180,14 +221,13 @@ public class CincuentazoGameController implements Initializable {
         if (lblBots != null) {
             lblBots.setText("Oponentes: " + this.numberOfBots + " Bots");
         }
+        assignBotData();
     }
 
     private void setupGameTimer() {
         gameTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                // El timer se detiene solo si llamamos a gameTimer.stop().
-                // Por lo tanto, no necesitamos la bandera aquí.
 
                 long elapsedNanos = now - startTime; // Tiempo total real transcurrido
                 long elapsedSeconds = elapsedNanos / 1_000_000_000;
