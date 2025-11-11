@@ -65,9 +65,9 @@
                   <ProgressBar prefHeight="7.0" prefWidth="97.0" progress="0.0" />
                </children>
             </VBox>
-            <VBox alignment="TOP_CENTER" layoutX="655.0" layoutY="292.0" prefHeight="117.0" prefWidth="105.0">
+            <VBox alignment="TOP_CENTER" layoutX="636.0" layoutY="292.0" prefHeight="117.0" prefWidth="124.0">
                <children>
-                  <Label fx:id="lblBotName3" alignment="CENTER" contentDisplay="CENTER" prefHeight="24.0" prefWidth="83.0" text="NOMBRE" textFill="WHITE">
+                  <Label fx:id="lblBotName3" alignment="CENTER" contentDisplay="CENTER" prefHeight="24.0" prefWidth="129.0" text="NOMBRE" textFill="WHITE">
                      <font>
                         <Font name="Times New Roman Bold" size="15.0" />
                      </font>
