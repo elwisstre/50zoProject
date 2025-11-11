@@ -1,4 +1,5 @@
 package com.example.demomvc.Controller;
+import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -42,6 +43,12 @@ public class CincuentazoGameController implements Initializable {
     private Button btnResumeGame;
     @FXML
     private Button btnBackToMenu;
+    @FXML
+    private Label lblTimer;
+    private AnimationTimer gameTimer;
+    private long startTime;
+    private long pausedTime = 0;
+
 
 
     // 1. INICIALIZACIÓN Y CONEXIÓN DE EVENTOS
@@ -50,7 +57,15 @@ public class CincuentazoGameController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        setupGameTimer();
+        startGameTimer();
+
         // --- Conexión del Botón de PAUSA PRINCIPAL ---
+        if (lblTimer == null) {
+            System.err.println("ERROR FATAL: lblTimer no está conectado al FXML. El contador no funcionará.");
+        } else {
+            lblTimer.setText("00:00"); // Establecer un valor inicial visible
+        }
         if (btnPause != null) {
             btnPause.setOnAction(e -> togglePauseMenu(true)); // Pausar y mostrar el menú
         }
@@ -76,35 +91,37 @@ public class CincuentazoGameController implements Initializable {
         }
 
     }
-
+    private void startGameTimer() {
+        pausedTime = 0;
+        startTime = System.nanoTime();
+        gameTimer.start();
+    }
 
     // 2. LÓGICA DE PAUSA Y REANUDACIÓN
 
 
     public void togglePauseMenu(boolean isPausing) {
-
         if (pauseMenuContainer == null || gameElementsContainer == null) return;
 
         if (isPausing) {
-
             gameElementsContainer.setEffect(new GaussianBlur(15));
-
             if (btnPause != null) {
                 btnPause.setVisible(false);
             }
-
+            gameTimer.stop();
+            pausedTime = System.nanoTime() - startTime;
             pauseMenuContainer.setVisible(true);
 
         } else {
 
             gameElementsContainer.setEffect(null);
-
             if (btnPause != null) {
                 btnPause.setVisible(true);
                 btnPause.setSelected(false);
             }
-
             pauseMenuContainer.setVisible(false);
+            startTime = System.nanoTime() - pausedTime;
+            gameTimer.start();
         }
     }
     private void handleBackToMenu(javafx.event.ActionEvent event) {
@@ -124,6 +141,9 @@ public class CincuentazoGameController implements Initializable {
 
             fadeOut.setOnFinished(e -> {
                 try {
+                    if (gameTimer != null) {
+                        gameTimer.stop(); // Detiene el bucle del AnimationTimer
+                    }
 
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demomvc/Controller/PrimeraVentana50zo.fxml"));
                     Parent root = loader.load();
@@ -162,4 +182,25 @@ public class CincuentazoGameController implements Initializable {
         }
     }
 
+    private void setupGameTimer() {
+        gameTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                // El timer se detiene solo si llamamos a gameTimer.stop().
+                // Por lo tanto, no necesitamos la bandera aquí.
+
+                long elapsedNanos = now - startTime; // Tiempo total real transcurrido
+                long elapsedSeconds = elapsedNanos / 1_000_000_000;
+
+                long minutes = elapsedSeconds / 60;
+                long seconds = elapsedSeconds % 60;
+
+                String timeFormatted = String.format("%02d:%02d", minutes, seconds);
+
+                if (lblTimer != null) {
+                    lblTimer.setText(timeFormatted);
+                }
+            }
+        };
+    }
 }
