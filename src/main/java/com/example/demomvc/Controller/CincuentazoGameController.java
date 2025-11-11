@@ -49,7 +49,7 @@ public class CincuentazoGameController implements Initializable {
             "/com/example/demomvc/PlayerBotIcons/jugador14.png",
             "/com/example/demomvc/PlayerBotIcons/jugador15.png"
     );
-    private List<Player> activePlayers; // Lista que contendrá al jugador humano y a los bots
+    private List<Player> activePlayers = new ArrayList<>();
     @FXML
     private ImageView imgBotAvatar1;
     @FXML
