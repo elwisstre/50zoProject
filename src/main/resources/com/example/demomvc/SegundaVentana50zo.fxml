@@ -92,7 +92,7 @@
                </children>
             </HBox>
             <ProgressBar layoutX="276.0" layoutY="628.0" prefHeight="8.0" prefWidth="200.0" progress="0.0" />
-            <Label fx:id="lblTimer" layoutX="14.0" layoutY="41.0" opacity="0.81" prefHeight="67.0" prefWidth="69.0" text="00" textFill="WHITE">
+            <Label fx:id="lblTimer" layoutX="21.0" layoutY="42.0" opacity="0.81" prefHeight="86.0" prefWidth="97.0" text="00" textFill="WHITE">
                <font>
                   <Font name="Times New Roman Bold Italic" size="32.0" />
                </font>
