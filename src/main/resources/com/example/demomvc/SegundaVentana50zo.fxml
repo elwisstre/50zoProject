@@ -61,7 +61,7 @@
                         <Font name="Times New Roman Bold" size="15.0" />
                      </font>
                   </Label>
-                  <ImageView fitHeight="67.0" fitWidth="71.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="imgBotAvatar2" fitHeight="67.0" fitWidth="71.0" pickOnBounds="true" preserveRatio="true" />
                   <ProgressBar prefHeight="7.0" prefWidth="97.0" progress="0.0" />
                </children>
             </VBox>
@@ -72,13 +72,13 @@
                         <Font name="Times New Roman Bold" size="15.0" />
                      </font>
                   </Label>
-                  <ImageView fitHeight="70.0" fitWidth="89.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="imgBotAvatar3" fitHeight="70.0" fitWidth="89.0" pickOnBounds="true" preserveRatio="true" />
                   <ProgressBar prefHeight="7.0" prefWidth="97.0" progress="0.0" />
                </children>
             </VBox>
             <HBox layoutX="277.0" layoutY="42.0" prefHeight="67.0" prefWidth="203.0">
                <children>
-                  <ImageView fitHeight="63.0" fitWidth="78.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="imgBotAvatar1" fitHeight="63.0" fitWidth="78.0" pickOnBounds="true" preserveRatio="true" />
                   <VBox prefHeight="67.0" prefWidth="124.0">
                      <children>
                         <Label fx:id="lblBotName1" alignment="CENTER" contentDisplay="CENTER" prefHeight="31.0" prefWidth="124.0" text="NOMBRE" textFill="WHITE">

@@ -1,4 +1,5 @@
 package com.example.demomvc.Controller;
+import com.example.demomvc.Model.Player;
 import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
@@ -12,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.GaussianBlur;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -21,11 +23,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class CincuentazoGameController implements Initializable {
     // Lista de nombres de caballeros
@@ -34,11 +32,40 @@ public class CincuentazoGameController implements Initializable {
             "Sterling", "Percival", "Julian", "Maximilian", "Godfrey",
             "Augustus", "Theodore", "Sebastian", "Valentino", "Cornelius"
     );
+    private static final List<String> AVATAR_PATHS = Arrays.asList(
+            "/com/example/demomvc/PlayerBotIcons/jugador1.png",
+            "/com/example/demomvc/PlayerBotIcons/jugador2.png",
+            "/com/example/demomvc/PlayerBotIcons/jugador3.png",
+            "/com/example/demomvc/PlayerBotIcons/jugador4.png",
+            "/com/example/demomvc/PlayerBotIcons/jugador5.png",
+            "/com/example/demomvc/PlayerBotIcons/jugador6.png",
+            "/com/example/demomvc/PlayerBotIcons/jugador7.png",
+            "/com/example/demomvc/PlayerBotIcons/jugador8.png",
+            "/com/example/demomvc/PlayerBotIcons/jugador9.png",
+            "/com/example/demomvc/PlayerBotIcons/jugador10.png",
+            "/com/example/demomvc/PlayerBotIcons/jugador11.png",
+            "/com/example/demomvc/PlayerBotIcons/jugador12.png",
+            "/com/example/demomvc/PlayerBotIcons/jugador13.png",
+            "/com/example/demomvc/PlayerBotIcons/jugador14.png",
+            "/com/example/demomvc/PlayerBotIcons/jugador15.png"
+    );
+    private List<Player> activePlayers; // Lista que contendrá al jugador humano y a los bots
+    @FXML
+    private ImageView imgBotAvatar1;
+    @FXML
+    private ImageView imgBotAvatar2;
+    @FXML
+    private ImageView imgBotAvatar3;
 
-    @FXML private Label lblBotName1;
-    @FXML private Label lblBotName2;
-    @FXML private Label lblBotName3;
+    @FXML
+    private Label lblBotName1;
+    @FXML
+    private Label lblBotName2;
+    @FXML
+    private Label lblBotName3;
+
     private int numberOfBots;
+
     private MediaPlayer ambientMusicPlayer;
     @FXML
     private AnchorPane gameRootPane;
@@ -110,28 +137,55 @@ public class CincuentazoGameController implements Initializable {
         List<String> shuffledNames = new java.util.ArrayList<>(ELEGANT_NAMES);
         Collections.shuffle(shuffledNames);
 
+        List<String> shuffledAvatars = new ArrayList<>(AVATAR_PATHS);
+        Collections.shuffle(shuffledAvatars);
+
         // Lista de todos los Labels de nombres de bots
         List<Label> botNameLabels = Arrays.asList(lblBotName1, lblBotName2, lblBotName3);
+        List<ImageView> botAvatarViews = Arrays.asList(imgBotAvatar1, imgBotAvatar2, imgBotAvatar3);
 
         // Aseguramos que no intentamos asignar más nombres que bots o espacios disponibles
         int botsToAssign = Math.min(this.numberOfBots, botNameLabels.size());
 
+        // Crear objetos Player (Bot) y asignar a la UI
         for (int i = 0; i < botsToAssign; i++) {
+            String name = shuffledNames.get(i);
+            String avatarPath = shuffledAvatars.get(i);
+
+            // Crea el objeto Player para el bot
+            Player bot = new Player(name, avatarPath, true);
+            activePlayers.add(bot);
+
+            // Asigna a la Interfaz de Usuario
             Label nameLabel = botNameLabels.get(i);
+            ImageView avatarView = botAvatarViews.get(i);
 
-            if (nameLabel != null) {
+            if (nameLabel != null && avatarView != null) {
+                nameLabel.setText(bot.getName());
 
-                nameLabel.setText(shuffledNames.get(i));
+                try {
+                    // Usamos la ruta del Player
+                    Image avatarImage = new Image(getClass().getResourceAsStream(bot.getAvatarPath()));
+                    avatarView.setImage(avatarImage);
+                } catch (Exception e) {
+                    System.err.println("Error al cargar avatar para bot: " + bot.getAvatarPath());
+                    // ... manejo de error ...
+                }
             }
         }
 
+        // 4. Ocultar espacios vacíos
         for (int i = botsToAssign; i < botNameLabels.size(); i++) {
             Label nameLabel = botNameLabels.get(i);
-            if (nameLabel != null) {
-                nameLabel.setText("Espacio Vacío");
-            }
+            ImageView avatarView = botAvatarViews.get(i);
+            if (nameLabel != null) { nameLabel.setText(" "); } // Deja el Label vacío
+            if (avatarView != null) { avatarView.setImage(null); avatarView.setVisible(false); }
         }
+
+        // Opcional: Agregar el jugador humano (Ajusta la inicialización de tu jugador humano)
+        // activePlayers.add(0, new Player("Jugador Humano", "ruta/a/humano.png", false));
     }
+
     private void startGameTimer() {
         pausedTime = 0;
         startTime = System.nanoTime();
