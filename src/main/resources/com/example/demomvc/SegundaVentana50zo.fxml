@@ -54,26 +54,26 @@
                   </Pane>
                </center>
             </BorderPane>
-            <VBox layoutY="287.0" prefHeight="144.0" prefWidth="97.0">
+            <VBox alignment="TOP_CENTER" layoutY="287.0" prefHeight="144.0" prefWidth="97.0">
                <children>
-                  <Label prefHeight="29.0" prefWidth="97.0" text="NOMBRE" textFill="WHITE">
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="29.0" prefWidth="97.0" text="NOMBRE" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <ImageView fitHeight="77.0" fitWidth="94.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fitHeight="67.0" fitWidth="71.0" pickOnBounds="true" preserveRatio="true" />
                   <ProgressBar prefHeight="7.0" prefWidth="97.0" progress="0.0" />
                </children>
             </VBox>
-            <VBox layoutX="655.0" layoutY="292.0" prefHeight="144.0" prefWidth="105.0">
+            <VBox alignment="TOP_CENTER" layoutX="655.0" layoutY="292.0" prefHeight="117.0" prefWidth="105.0">
                <children>
-                  <Label prefHeight="30.0" prefWidth="97.0" text="NOMBRE" textFill="WHITE">
+                  <Label alignment="TOP_CENTER" contentDisplay="CENTER" prefHeight="24.0" prefWidth="83.0" text="NOMBRE" textFill="WHITE">
                      <font>
-                        <Font size="17.0" />
+                        <Font size="15.0" />
                      </font>
                   </Label>
-                  <ImageView fitHeight="75.0" fitWidth="89.0" pickOnBounds="true" preserveRatio="true" />
-                  <ProgressBar prefHeight="8.0" prefWidth="97.0" progress="0.0" />
+                  <ImageView fitHeight="70.0" fitWidth="89.0" pickOnBounds="true" preserveRatio="true" />
+                  <ProgressBar prefHeight="7.0" prefWidth="97.0" progress="0.0" />
                </children>
             </VBox>
             <HBox layoutX="277.0" layoutY="42.0" prefHeight="67.0" prefWidth="203.0">
@@ -83,7 +83,7 @@
                      <children>
                         <Label prefHeight="34.0" prefWidth="124.0" text="NOMBRE" textFill="WHITE">
                            <font>
-                              <Font size="16.0" />
+                              <Font size="15.0" />
                            </font>
                         </Label>
                         <ProgressBar prefHeight="7.0" prefWidth="124.0" progress="0.0" />
@@ -92,7 +92,7 @@
                </children>
             </HBox>
             <ProgressBar layoutX="276.0" layoutY="628.0" prefHeight="8.0" prefWidth="200.0" progress="0.0" />
-            <Label fx:id="lblTimer" layoutX="21.0" layoutY="42.0" opacity="0.81" prefHeight="86.0" prefWidth="97.0" text="00" textFill="WHITE">
+            <Label fx:id="lblTimer" layoutX="14.0" layoutY="26.0" opacity="0.81" prefHeight="86.0" prefWidth="97.0" text="00" textFill="WHITE">
                <font>
                   <Font name="Times New Roman Bold Italic" size="32.0" />
                </font>
@@ -102,7 +102,7 @@
             </Label>
             <ToggleButton fx:id="btnPause" layoutX="687.0" layoutY="31.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="71.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" text="ToggleButton" textFill="TRANSPARENT">
                <graphic>
-                  <ImageView fitHeight="56.0" fitWidth="76.0" mouseTransparent="true" opacity="0.88" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="61.0" fitWidth="67.0" mouseTransparent="true" opacity="0.88" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@PauseIcon2.png" />
                      </image>
