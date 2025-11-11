@@ -19,12 +19,8 @@ import javafx.scene.Node;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.fxml.FXML;
 import javafx.scene.control.ToggleButton;
-import javafx.event.ActionEvent;
 import javafx.application.Platform;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.Scene;
 
 
@@ -37,10 +33,7 @@ public class CincuentazoWelcomeController implements Initializable {
     //
     @FXML private Button btnJugar;
     @FXML private Button btnSalir;
-    private MediaPlayer mediaPlayer;
-
-
-
+    private MediaPlayer mediaPlayer; // Este es el reproductor
 
     //
     @Override
@@ -52,7 +45,6 @@ public class CincuentazoWelcomeController implements Initializable {
             btnJugar.setOnAction(this::handlePlayGame);
         }
 
-
         if (btnSalir != null) {
             btnSalir.setOnAction(this::handleExitGame);
         }
@@ -61,13 +53,13 @@ public class CincuentazoWelcomeController implements Initializable {
             tglBot1.setSelected(true);
         }
 
+        //
         if (tglBot1 != null && tglBot2 != null && tglBot3 != null) {
             tglBot1.setOnAction(e -> {
                 if (tglBot1.isSelected()) {
                     tglBot2.setSelected(false);
                     tglBot3.setSelected(false);
                 } else {
-                    // Siempre debe haber uno seleccionado
                     tglBot1.setSelected(true);
                 }
             });
@@ -90,10 +82,13 @@ public class CincuentazoWelcomeController implements Initializable {
                 }
             });
         }
+
     }
+
+    // ...
+
     private void iniciarMusicaAmbiente() {
         try {
-            // Obtener la URL del recurso de audio
             URL resource = getClass().getResource("/com/example/demomvc/JazzAmbiental.mp3");
             if (resource == null) {
                 System.out.println("Error: Archivo de música no encontrado.");
@@ -102,19 +97,15 @@ public class CincuentazoWelcomeController implements Initializable {
 
             Media media = new Media(resource.toExternalForm());
             mediaPlayer = new MediaPlayer(media);
-
-            // Asegurar que la música se repita
             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-
-            // Establecer un volumen inicial
             mediaPlayer.setVolume(0.35);
-
             mediaPlayer.play();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     private int getNumBotsSeleccionados() {
         if (tglBot1.isSelected()) {
             return 1;
@@ -125,15 +116,17 @@ public class CincuentazoWelcomeController implements Initializable {
         }
         return 1;
     }
-
-    private void loadGameScene(Stage stageToLoadInto, int numBots) {
+    private void loadGameScene(Stage stageToLoadInto, int numBots, MediaPlayer musicPlayer) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/demomvc/SegundaVentana50zo.fxml"));
             Parent gameRoot = fxmlLoader.load();
 
-            // Obtener el controlador del juego y ENVIAR LOS DATOS
+
             CincuentazoGameController gameController = fxmlLoader.getController();
             gameController.setGameData(numBots);
+
+
+            gameController.setAmbientMusicPlayer(musicPlayer);
 
             // Aplicar la nueva escena al Stage que estaba oculto
             stageToLoadInto.setScene(new Scene(gameRoot));
@@ -147,29 +140,29 @@ public class CincuentazoWelcomeController implements Initializable {
     }
     private void handlePlayGame(ActionEvent event) {
         int numBotsParaJuego = getNumBotsSeleccionados();
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-            mediaPlayer.dispose();
-        }
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene currentScene = currentStage.getScene();
 
+
         FadeTransition fadeOut = new FadeTransition(Duration.seconds(1.5), currentScene.getRoot());
-        fadeOut.setFromValue(1.0); // De opacidad completa
-        fadeOut.setToValue(0.2);   // A invisible
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
 
         // Cuando el Fade-Out termina:
         fadeOut.setOnFinished(e -> {
             try {
 
+
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/demomvc/SegundaVentana50zo.fxml"));
                 Parent gameRoot = fxmlLoader.load();
 
-                // Configuramos el nuevo controlador
+
                 CincuentazoGameController gameController = fxmlLoader.getController();
                 gameController.setGameData(numBotsParaJuego);
-                currentStage.setScene(new Scene(gameRoot));
-                currentStage.setTitle("Cincuentazo - La Partida");
+
+                loadGameScene(currentStage, numBotsParaJuego, this.mediaPlayer);
+
+                // Aplicar Fade-In
                 FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), gameRoot);
                 fadeIn.setFromValue(0.0);
                 fadeIn.setToValue(1.0);
