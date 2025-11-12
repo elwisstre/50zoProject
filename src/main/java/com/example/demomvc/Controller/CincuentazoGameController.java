@@ -288,6 +288,11 @@ public class CincuentazoGameController implements Initializable {
         // Initialize the core game logic
         this.game = new Game(numBots);
 
+        // Muestra la suma inicial al empezar la partida
+        if (lblCurrentSum != null) {
+            lblCurrentSum.setText(String.valueOf(game.getTableSum()));
+        }
+
         assignBotData();
 
         // Start a background thread to observe game updates
