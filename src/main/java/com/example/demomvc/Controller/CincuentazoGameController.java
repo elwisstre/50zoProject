@@ -17,12 +17,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+
+import com.example.demomvc.Model.Game;
+import com.example.demomvc.Model.Card;
+import com.example.demomvc.Model.Player;
 
 public class CincuentazoGameController implements Initializable {
     // Lista de nombres de caballeros
@@ -63,7 +68,11 @@ public class CincuentazoGameController implements Initializable {
     @FXML
     private Label lblBotName3;
 
+    @FXML
+    private HBox humanHandContainer;
+
     private int numberOfBots;
+    private Game game;
 
     private MediaPlayer ambientMusicPlayer;
     @FXML
@@ -88,7 +97,6 @@ public class CincuentazoGameController implements Initializable {
     private AnimationTimer gameTimer;
     private long startTime;
     private long pausedTime = 0;
-
 
 
     // 1. INICIALIZACIÓN Y CONEXIÓN DE EVENTOS
@@ -131,6 +139,7 @@ public class CincuentazoGameController implements Initializable {
         }
 
     }
+
     private void assignBotData() {
         // Obtener una copia de la lista de nombres y mezclarla (shuffle)
         List<String> shuffledNames = new java.util.ArrayList<>(ELEGANT_NAMES);
@@ -180,7 +189,6 @@ public class CincuentazoGameController implements Initializable {
             if (nameLabel != null) { nameLabel.setText(" "); } // Deja el Label vacío
             if (avatarView != null) { avatarView.setImage(null); avatarView.setVisible(false); }
         }
-
         // Opcional: Agregar el jugador humano (Ajusta la inicialización de tu jugador humano)
         // activePlayers.add(0, new Player("Jugador Humano", "ruta/a/humano.png", false));
     }
@@ -274,7 +282,16 @@ public class CincuentazoGameController implements Initializable {
         if (lblBots != null) {
             lblBots.setText("Oponentes: " + this.numberOfBots + " Bots");
         }
+
+        // Initialize the core game logic
+        this.game = new Game(numBots);
+
         assignBotData();
+
+        // Start a background thread to observe game updates
+        startGameMonitorThread();
+
+        displayHumanHand();
     }
 
     private void setupGameTimer() {
@@ -295,5 +312,68 @@ public class CincuentazoGameController implements Initializable {
                 }
             }
         };
+    }
+
+    private void startGameMonitorThread() {
+        Thread monitor = new Thread(() -> {
+            try {
+                while (!game.isGameOver()) {
+                    Thread.sleep(1000);
+                    javafx.application.Platform.runLater(() -> {
+                        lblTimer.setText("Total: " + game.getTableSum());
+                    });
+                }
+                javafx.application.Platform.runLater(() -> {
+                    lblTimer.setText("Game Over!");
+                });
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+        monitor.setDaemon(true);
+        monitor.start();
+    }
+
+    private void displayHumanHand() {
+        if (humanHandContainer == null || game == null) return;
+
+        humanHandContainer.getChildren().clear();
+
+        Player human = game.currentPlayer(); // the first one (you)
+        List<Card> hand = human.getHand();
+
+        for (int i = 0; i < hand.size(); i++) {
+            Card card = hand.get(i);
+
+            // Cargar imagen (usa tus recursos reales, por ejemplo /Cards/A.png, etc.)
+            ImageView img = new ImageView();
+            try {
+                String path = "/com/example/demomvc/Cards/" + card.getSymbol() + ".png";
+                img.setImage(new Image(getClass().getResourceAsStream(path)));
+            } catch (Exception e) {
+                // Si no hay imagen, usa texto temporal
+                img.setImage(new Image(getClass().getResourceAsStream("/com/example/demomvc/Cards/back.png")));
+            }
+
+            img.setFitWidth(90);
+            img.setFitHeight(120);
+            img.setPreserveRatio(true);
+
+            final int index = i;
+            img.setOnMouseClicked(e -> handleHumanPlay(index));
+
+            humanHandContainer.getChildren().add(img);
+        }
+    }
+
+    private void handleHumanPlay(int index) {
+        if (game == null) return;
+
+        boolean played = game.playHumanCard(index);
+        if (played) {
+            displayHumanHand(); // Refresh hand
+        } else {
+            System.out.println("You cannot play that card (would exceed 50).");
+        }
     }
 }
