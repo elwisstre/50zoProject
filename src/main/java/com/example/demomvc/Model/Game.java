@@ -45,7 +45,7 @@ public class Game {
      * Prepares the game by dealing initial cards and setting the first table card.
      */
     private void startGame() {
-        // Give 4 cards to each player
+        // Repartir 4 cartas a cada jugador
         for (Player p : players) {
             for (int i = 0; i < 4; i++) {
                 Card c = deck.drawCard();
@@ -53,16 +53,11 @@ public class Game {
             }
         }
 
-        // Draw a first card that does NOT make the sum negative
-        Card startCard;
-        do {
-            startCard = deck.drawCard();
-        } while (startCard.getValue(false) < 0); // skip J, Q, K
+        // No colocar carta inicial en la mesa, comienza en 0
+        tablePile.clear();
+        tableSum = 0;
 
-        tablePile.add(startCard);
-        tableSum = computeCardValue(startCard, 0);
-
-        System.out.println("Game started. Table sum = " + tableSum);
+        System.out.println("Game started. Table sum = 0");
         currentPlayerIndex = 0;
     }
 
