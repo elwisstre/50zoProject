@@ -349,27 +349,34 @@ public class CincuentazoGameController implements Initializable {
                     Thread.sleep(1000);
                     javafx.application.Platform.runLater(() -> {
                         lblTimer.setText("Total: " + game.getTableSum());
-                        displayHumanHand(); // mantiene la UI sincronizada con la mano real
+                        displayHumanHand(); // mantiene la UI sincronizada
                     });
                 }
 
-                // Cuando termina el juego
+                // Cuando se acaba el juego
                 javafx.application.Platform.runLater(() -> {
-                    lblTimer.setText("Game Over!");
-
-                    Player winner = game.getWinner();
-                    String message;
-                    if (winner != null) {
-                        message = "🏆 Winner: " + winner.getName() + " 🏆";
-                    } else {
-                        message = "No winner (draw)";
+                    // detener el temporizador
+                    if (gameTimer != null) {
+                        gameTimer.stop();
                     }
 
-                    // Mostrar ventana emergente
+                    lblTimer.setText("Game Over!");
+
+                    // Obtener el ganador
+                    Player winner = game.getPlayers().stream()
+                            .filter(p -> !p.isEliminated())
+                            .findFirst()
+                            .orElse(null);
+
+                    // Mostrar alerta
+                    String message = (winner != null)
+                            ? "🏆 ¡" + winner.getName() + " ha ganado la partida! 🏆"
+                            : "Empate — no hay ganador.";
+
                     javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
                             javafx.scene.control.Alert.AlertType.INFORMATION);
-                    alert.setTitle("Game Over");
-                    alert.setHeaderText(null);
+                    alert.setTitle("Fin del juego");
+                    alert.setHeaderText("Juego terminado");
                     alert.setContentText(message);
                     alert.showAndWait();
                 });
@@ -381,6 +388,7 @@ public class CincuentazoGameController implements Initializable {
         monitor.setDaemon(true);
         monitor.start();
     }
+
 
     private void displayHumanHand() {
         if (humanHandContainer == null || game == null) return;
