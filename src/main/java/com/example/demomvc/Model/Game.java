@@ -116,7 +116,7 @@ public class Game {
 
         System.out.println(human.getName() + " played " + selected + ". Sum = " + tableSum);
 
-        // 🔥 Notifica al controlador para mostrar la carta en el centro
+        // Notifica al controlador para mostrar la carta en el centro
         if (onCardPlayed != null) {
             onCardPlayed.accept(selected);
         }
@@ -147,7 +147,7 @@ public class Game {
 
         System.out.println(human.getName() + " played " + selected + ". Sum = " + tableSum);
 
-        // 🔥 Notifica al controlador para mostrar la carta en el centro
+        // Notifica al controlador para mostrar la carta en el centro
         if (onCardPlayed != null) {
             onCardPlayed.accept(selected);
         }
@@ -156,6 +156,7 @@ public class Game {
         nextTurn();
         return true;
     }
+
 
 
     /**
@@ -195,6 +196,11 @@ public class Game {
                 tablePile.add(chosen);
                 bot.removeCard(chosen);
                 System.out.println(bot.getName() + " played " + chosen + ". Sum = " + tableSum);
+
+                // Notifica al controlador para mostrar la carta en el centro
+                if (onCardPlayed != null) {
+                    onCardPlayed.accept(chosen);
+                }
 
                 drawReplacementCard(bot);
             } else {
@@ -292,6 +298,4 @@ public class Game {
     public void setOnCardPlayed(Consumer<Card> callback) {
         this.onCardPlayed = callback;
     }
-
-
 }
