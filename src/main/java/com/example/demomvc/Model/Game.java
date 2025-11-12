@@ -255,4 +255,11 @@ public class Game {
     public Player currentPlayer() { return players.get(currentPlayerIndex); }
     public int getTableSum() { return tableSum; }
     public boolean isGameOver() { return gameOver; }
+    public Player getWinner() {
+        if (!gameOver) return null;
+        return players.stream()
+                .filter(p -> !p.isEliminated())
+                .findFirst()
+                .orElse(null);
+    }
 }

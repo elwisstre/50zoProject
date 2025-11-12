@@ -325,10 +325,27 @@ public class CincuentazoGameController implements Initializable {
                     });
                 }
 
+                // Cuando termina el juego
                 javafx.application.Platform.runLater(() -> {
                     lblTimer.setText("Game Over!");
-                    // ... mostrar ganador ...
+
+                    Player winner = game.getWinner();
+                    String message;
+                    if (winner != null) {
+                        message = "🏆 Winner: " + winner.getName() + " 🏆";
+                    } else {
+                        message = "No winner (draw)";
+                    }
+
+                    // Mostrar ventana emergente
+                    javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
+                            javafx.scene.control.Alert.AlertType.INFORMATION);
+                    alert.setTitle("Game Over");
+                    alert.setHeaderText(null);
+                    alert.setContentText(message);
+                    alert.showAndWait();
                 });
+
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
