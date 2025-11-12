@@ -49,30 +49,41 @@ public class Game {
             }
         }
 
-        // Place one random card on the table
-        Card startCard = deck.drawCard();
-        if (startCard == null) throw new IllegalStateException("Deck is empty at start!");
+        // Draw a first card that does NOT make the sum negative
+        Card startCard;
+        do {
+            startCard = deck.drawCard();
+        } while (startCard.getValue(false) < 0); // skip J, Q, K
 
         tablePile.add(startCard);
         tableSum = computeCardValue(startCard, 0);
-        System.out.println("Game started. Table sum = " + tableSum);
 
-        // Human starts
+        System.out.println("Game started. Table sum = " + tableSum);
         currentPlayerIndex = 0;
+    }
+
+    public Player getHumanPlayer() {
+        if (players.isEmpty()) return null;
+        return players.get(0); // asumimos que el humano se creó en índice 0
     }
 
     /**
      * Calculates how the card affects the total table sum based on game rules.
+     * Supports negative effects for J, Q, K, and proper value selection for A.
      */
     private int computeCardValue(Card card, int currentSum) {
-        if (card.getSymbol().equals("A")) {
-            int v10 = card.getValue(true);
-            int v1 = card.getValue(false);
-            // Choose the value that doesn't exceed 50
-            return currentSum + (currentSum + v10 <= 50 ? v10 : v1);
-        } else {
-            return currentSum + card.getValue(false);
+        String sym = card.getSymbol();
+
+        // Ace special case (1 or 10)
+        if (sym.equals("A")) {
+            int addTen = currentSum + 10;
+            int addOne = currentSum + 1;
+            // Siempre escoge el que no pase de 50
+            return (addTen <= 50) ? addTen : addOne;
         }
+
+        // Cualquier otra carta, solo suma su valor (puede ser negativo)
+        return currentSum + card.getValue(false);
     }
 
     /**
@@ -86,11 +97,14 @@ public class Game {
         Card selected = human.getHand().get(index);
 
         int newSum = computeCardValue(selected, tableSum);
-        if (newSum > 50) {
+
+        // Solo bloquea si la carta tiene valor positivo Y supera 50
+        if (selected.getValue(false) > 0 && newSum > 50) {
             System.out.println("That card exceeds 50. Invalid move.");
             return false;
         }
 
+        // Si pasa la validación, aplica la jugada
         tableSum = newSum;
         tablePile.add(selected);
         human.removeCard(selected);
@@ -101,6 +115,33 @@ public class Game {
         nextTurn();
         return true;
     }
+
+    public synchronized boolean playHumanCard(Card selected) {
+        if (gameOver || currentPlayer().isBot()) return false;
+        Player human = currentPlayer();
+
+        if (!human.getHand().contains(selected)) {
+            System.out.println("[DEBUG] Attempted to play a Card object not present in human's hand: " + selected);
+            return false;
+        }
+
+        int newSum = computeCardValue(selected, tableSum);
+        if (selected.getValue(false) > 0 && newSum > 50) {
+            System.out.println("That card exceeds 50. Invalid move.");
+            return false;
+        }
+
+    tableSum = newSum;
+        tablePile.add(selected);
+        human.removeCard(selected);
+
+        System.out.println(human.getName() + " played " + selected + ". Sum = " + tableSum);
+
+        drawReplacementCard(human);
+        nextTurn();
+        return true;
+    }
+
 
     /**
      * Handles turn rotation and triggers bot actions if needed.

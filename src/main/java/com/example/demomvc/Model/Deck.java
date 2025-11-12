@@ -11,13 +11,16 @@ public class Deck {
     public void reset() {
         cards.clear();
         String[] symbols = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+        String[] suits = {"corazon", "pica", "diamante", "trebol"};
+
         for (String s : symbols) {
-            for (int i = 0; i < 4; i++) { // 4 palos
-                cards.add(new Card(s));
+            for (String suit : suits) {
+                cards.add(new Card(s, suit));
             }
         }
         shuffle();
     }
+
 
     public void shuffle() { Collections.shuffle(cards, random); }
 
