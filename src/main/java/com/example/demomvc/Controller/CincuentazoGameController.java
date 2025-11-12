@@ -353,7 +353,7 @@ public class CincuentazoGameController implements Initializable {
                     });
                 }
 
-                // Cuando se acaba el juego
+                // Cuando termina el juego
                 javafx.application.Platform.runLater(() -> {
                     // detener el temporizador
                     if (gameTimer != null) {
@@ -362,21 +362,19 @@ public class CincuentazoGameController implements Initializable {
 
                     lblTimer.setText("Game Over!");
 
-                    // Obtener el ganador
-                    Player winner = game.getPlayers().stream()
-                            .filter(p -> !p.isEliminated())
-                            .findFirst()
-                            .orElse(null);
+                    Player winner = game.getWinner();
+                    String message;
+                    if (winner != null) {
+                        message = "🏆 Winner: " + winner.getName() + " 🏆";
+                    } else {
+                        message = "No winner (draw)";
+                    }
 
-                    // Mostrar alerta
-                    String message = (winner != null)
-                            ? "🏆 ¡" + winner.getName() + " ha ganado la partida! 🏆"
-                            : "Empate — no hay ganador.";
-
+                    // Mostrar ventana emergente
                     javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
                             javafx.scene.control.Alert.AlertType.INFORMATION);
-                    alert.setTitle("Fin del juego");
-                    alert.setHeaderText("Juego terminado");
+                    alert.setTitle("Game Over");
+                    alert.setHeaderText(null);
                     alert.setContentText(message);
                     alert.showAndWait();
                 });
