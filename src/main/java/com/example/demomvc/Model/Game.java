@@ -41,6 +41,10 @@ public class Game {
         startGame();
     }
 
+    public List<Player> getPlayers() {
+        return players;
+    }
+
     /**
      * Prepares the game by dealing initial cards and setting the first table card.
      */
