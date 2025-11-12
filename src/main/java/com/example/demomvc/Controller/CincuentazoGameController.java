@@ -420,7 +420,6 @@ public class CincuentazoGameController implements Initializable {
         boolean played = game.playHumanCard(selectedCard);
         if (played) {
             displayHumanHand(); // refresca la mano
-            showPlayedCard(selectedCard, true); // muestra la carta en la mesa
 
             // actualiza la suma en pantalla inmediatamente
             if (lblCurrentSum != null) {
