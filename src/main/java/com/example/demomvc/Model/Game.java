@@ -98,14 +98,17 @@ public class Game {
 
         int newSum = computeCardValue(selected, tableSum);
 
-        // Solo bloquea si la carta tiene valor positivo Y supera 50
         if (selected.getValue(false) > 0 && newSum > 50) {
             System.out.println("That card exceeds 50. Invalid move.");
             return false;
         }
 
-        // Si pasa la validación, aplica la jugada
+        // actualiza la suma
         tableSum = newSum;
+
+        // notifica al controlador para que actualice el label
+        notifySumChanged();
+
         tablePile.add(selected);
         human.removeCard(selected);
 
@@ -115,6 +118,7 @@ public class Game {
         nextTurn();
         return true;
     }
+
 
     public synchronized boolean playHumanCard(Card selected) {
         if (gameOver || currentPlayer().isBot()) return false;
@@ -173,9 +177,14 @@ public class Game {
             if (playable.isPresent()) {
                 Card chosen = playable.get();
                 tableSum = computeCardValue(chosen, tableSum);
+
+                // Actualiza el label de la UI con la nueva suma
+                notifySumChanged();
+
                 tablePile.add(chosen);
                 bot.removeCard(chosen);
                 System.out.println(bot.getName() + " played " + chosen + ". Sum = " + tableSum);
+
                 drawReplacementCard(bot);
             } else {
                 System.out.println(bot.getName() + " cannot play and is eliminated!");
@@ -255,4 +264,18 @@ public class Game {
     public Player currentPlayer() { return players.get(currentPlayerIndex); }
     public int getTableSum() { return tableSum; }
     public boolean isGameOver() { return gameOver; }
+
+    // Callback para avisar al controlador cuando cambie la suma
+    private Runnable onSumChanged;
+
+    public void setOnSumChanged(Runnable callback) {
+        this.onSumChanged = callback;
+    }
+
+    private void notifySumChanged() {
+        if (onSumChanged != null) {
+            javafx.application.Platform.runLater(onSumChanged);
+        }
+    }
+
 }
