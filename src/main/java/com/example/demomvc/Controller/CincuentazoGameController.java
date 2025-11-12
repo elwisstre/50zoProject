@@ -97,6 +97,8 @@ public class CincuentazoGameController implements Initializable {
     private AnimationTimer gameTimer;
     private long startTime;
     private long pausedTime = 0;
+    @FXML
+    private Label lblCurrentSum;
 
 
     // 1. INICIALIZACIÓN Y CONEXIÓN DE EVENTOS
@@ -292,6 +294,17 @@ public class CincuentazoGameController implements Initializable {
         startGameMonitorThread();
 
         displayHumanHand();
+
+        game.setOnSumChanged(() -> {
+            if (lblCurrentSum != null) {
+                int sum = game.getTableSum();
+                lblCurrentSum.setText(String.valueOf(sum));
+
+                if (sum < 25) lblCurrentSum.setTextFill(javafx.scene.paint.Color.LIMEGREEN);
+                else if (sum < 40) lblCurrentSum.setTextFill(javafx.scene.paint.Color.GOLD);
+                else lblCurrentSum.setTextFill(javafx.scene.paint.Color.RED);
+            }
+        });
     }
 
     private void setupGameTimer() {
@@ -391,7 +404,21 @@ public class CincuentazoGameController implements Initializable {
 
         boolean played = game.playHumanCard(selectedCard);
         if (played) {
-            displayHumanHand(); // Refresh the hand
+            displayHumanHand(); // refresca la mano
+
+            // actualiza la suma en pantalla inmediatamente
+            if (lblCurrentSum != null) {
+                int sum = game.getTableSum();
+                lblCurrentSum.setText(String.valueOf(sum));
+
+                if (sum < 25)
+                    lblCurrentSum.setTextFill(javafx.scene.paint.Color.LIMEGREEN);
+                else if (sum < 40)
+                    lblCurrentSum.setTextFill(javafx.scene.paint.Color.GOLD);
+                else
+                    lblCurrentSum.setTextFill(javafx.scene.paint.Color.RED);
+            }
+
         } else {
             System.out.println("You cannot play that card (would exceed 50).");
         }
