@@ -349,12 +349,17 @@ public class CincuentazoGameController implements Initializable {
                     Thread.sleep(1000);
                     javafx.application.Platform.runLater(() -> {
                         lblTimer.setText("Total: " + game.getTableSum());
-                        displayHumanHand(); // mantiene la UI sincronizada con la mano real
+                        displayHumanHand(); // mantiene la UI sincronizada
                     });
                 }
 
                 // Cuando termina el juego
                 javafx.application.Platform.runLater(() -> {
+                    // detener el temporizador
+                    if (gameTimer != null) {
+                        gameTimer.stop();
+                    }
+
                     lblTimer.setText("Game Over!");
 
                     Player winner = game.getWinner();
@@ -381,6 +386,7 @@ public class CincuentazoGameController implements Initializable {
         monitor.setDaemon(true);
         monitor.start();
     }
+
 
     private void displayHumanHand() {
         if (humanHandContainer == null || game == null) return;
