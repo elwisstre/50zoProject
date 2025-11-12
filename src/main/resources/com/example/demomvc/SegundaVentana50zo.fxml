@@ -46,12 +46,12 @@
                                 <Pane fx:id="tableArea" layoutX="0.0" layoutY="0.0" prefWidth="483.0" prefHeight="444.0" />
 
                                 <!-- Suma actual -->
-                                <Label fx:id="lblCurrentSum" layoutX="225.0" layoutY="4.0" prefHeight="41.0" prefWidth="70.0" text="0" textAlignment="CENTER" textFill="#fffefe">
+                                <Label fx:id="lblCurrentSum" layoutX="225.0" layoutY="50.0" prefHeight="41.0" prefWidth="70.0" text="0" textAlignment="CENTER" textFill="#fffefe">
                                     <font>
                                         <Font name="Times New Roman Bold Italic" size="33.0" />
                                     </font>
                                 </Label>
-                                <Label layoutX="140.0" layoutY="13.0" prefHeight="23.0" prefWidth="94.0" text="En suma:" textFill="WHITE">
+                                <Label layoutX="169.0" layoutY="37.0" prefHeight="23.0" prefWidth="94.0" text="En suma:" textFill="WHITE">
                                     <font>
                                         <Font name="Times New Roman Bold Italic" size="20.0" />
                                     </font>
