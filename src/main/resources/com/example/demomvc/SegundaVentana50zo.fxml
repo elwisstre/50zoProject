@@ -42,6 +42,9 @@
                                 <!-- Contenedor de cartas en la mesa -->
                                 <HBox fx:id="tableCardsContainer" alignment="CENTER" layoutX="50.0" layoutY="80.0" prefHeight="100.0" prefWidth="237.0" spacing="5" />
 
+                                <!-- 🔹 Contenedor para los dorsos de los bots -->
+                                <Pane fx:id="tableArea" layoutX="0.0" layoutY="0.0" prefWidth="483.0" prefHeight="444.0" />
+
                                 <!-- Suma actual -->
                                 <Label fx:id="lblCurrentSum" layoutX="225.0" layoutY="4.0" prefHeight="41.0" prefWidth="70.0" text="0" textAlignment="CENTER" textFill="#fffefe">
                                     <font>
