@@ -102,6 +102,8 @@ public class CincuentazoGameController implements Initializable {
     private Label lblCurrentSum;
     @FXML
     private Pane tableArea;
+    @FXML
+    private Pane centerPlayedCards;
 
 
     // 1. INICIALIZACIÓN Y CONEXIÓN DE EVENTOS
@@ -315,6 +317,9 @@ public class CincuentazoGameController implements Initializable {
                 else lblCurrentSum.setTextFill(javafx.scene.paint.Color.RED);
             }
         });
+
+        // Callback visual: cuando un bot juega una carta
+        game.setOnCardPlayed(card -> showPlayedCard(card, false));
     }
 
     private void setupGameTimer() {
@@ -398,6 +403,7 @@ public class CincuentazoGameController implements Initializable {
         boolean played = game.playHumanCard(selectedCard);
         if (played) {
             displayHumanHand(); // refresca la mano
+            showPlayedCard(selectedCard, true); // muestra la carta en la mesa
 
             // actualiza la suma en pantalla inmediatamente
             if (lblCurrentSum != null) {
@@ -453,5 +459,45 @@ public class CincuentazoGameController implements Initializable {
                 tableArea.getChildren().add(backCard);
             }
         }
+    }
+
+    private void showPlayedCard(Card card, boolean isHuman) {
+        if (centerPlayedCards == null) return;
+
+        javafx.application.Platform.runLater(() -> {
+            ImageView img = new ImageView();
+            try {
+                String path = "/com/example/demomvc/Cards/" + card.getImageFileName();
+                img.setImage(new Image(getClass().getResourceAsStream(path)));
+            } catch (Exception e) {
+                img.setImage(new Image(getClass().getResourceAsStream("/com/example/demomvc/Cards/back.png")));
+            }
+
+            // Tamaño estándar
+            img.setFitWidth(70);
+            img.setFitHeight(100);
+            img.setPreserveRatio(true);
+            img.setEffect(new javafx.scene.effect.DropShadow(15, javafx.scene.paint.Color.BLACK));
+
+            // Calcula el centro del Pane
+            double centerX = (centerPlayedCards.getWidth() - img.getFitWidth()) / 2;
+            double centerY = (centerPlayedCards.getHeight() - img.getFitHeight()) / 2;
+            img.setLayoutX(centerX);
+            img.setLayoutY(centerY);
+
+            // Rotación y leve desplazamiento aleatorio (para efecto de pila)
+            Random random = new Random();
+            img.setRotate(random.nextInt(11) - 5); // -5° a +5°
+            img.setTranslateX(random.nextInt(11) - 5);
+            img.setTranslateY(random.nextInt(11) - 5 + (isHuman ? 10 : -10));
+
+            // Añade la carta al centro
+            centerPlayedCards.getChildren().add(img);
+
+            // Mantén máximo 5 cartas visibles
+            if (centerPlayedCards.getChildren().size() > 5) {
+                centerPlayedCards.getChildren().remove(0);
+            }
+        });
     }
 }

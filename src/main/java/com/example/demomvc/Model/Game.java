@@ -1,6 +1,7 @@
 package com.example.demomvc.Model;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * Represents the main game logic for the "Cincuentazo" card game.
@@ -19,6 +20,9 @@ public class Game {
     private boolean gameOver = false;
 
     private final Random random = new Random();
+
+    private Consumer<Card> onCardPlayed;
+
 
     /**
      * Initializes the game with 1 human and N bots.
@@ -105,20 +109,22 @@ public class Game {
 
         // actualiza la suma
         tableSum = newSum;
-
-        // notifica al controlador para que actualice el label
-        notifySumChanged();
+        notifySumChanged(); // notifica cambio en la suma
 
         tablePile.add(selected);
         human.removeCard(selected);
 
         System.out.println(human.getName() + " played " + selected + ". Sum = " + tableSum);
 
+        // 🔥 Notifica al controlador para mostrar la carta en el centro
+        if (onCardPlayed != null) {
+            onCardPlayed.accept(selected);
+        }
+
         drawReplacementCard(human);
         nextTurn();
         return true;
     }
-
 
     public synchronized boolean playHumanCard(Card selected) {
         if (gameOver || currentPlayer().isBot()) return false;
@@ -135,11 +141,16 @@ public class Game {
             return false;
         }
 
-    tableSum = newSum;
+        tableSum = newSum;
         tablePile.add(selected);
         human.removeCard(selected);
 
         System.out.println(human.getName() + " played " + selected + ". Sum = " + tableSum);
+
+        // 🔥 Notifica al controlador para mostrar la carta en el centro
+        if (onCardPlayed != null) {
+            onCardPlayed.accept(selected);
+        }
 
         drawReplacementCard(human);
         nextTurn();
@@ -277,5 +288,10 @@ public class Game {
             javafx.application.Platform.runLater(onSumChanged);
         }
     }
+
+    public void setOnCardPlayed(Consumer<Card> callback) {
+        this.onCardPlayed = callback;
+    }
+
 
 }
