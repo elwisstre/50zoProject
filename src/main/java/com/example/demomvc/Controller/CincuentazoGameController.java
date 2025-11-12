@@ -321,10 +321,13 @@ public class CincuentazoGameController implements Initializable {
                     Thread.sleep(1000);
                     javafx.application.Platform.runLater(() -> {
                         lblTimer.setText("Total: " + game.getTableSum());
+                        displayHumanHand(); // mantiene la UI sincronizada con la mano real
                     });
                 }
+
                 javafx.application.Platform.runLater(() -> {
                     lblTimer.setText("Game Over!");
+                    // ... mostrar ganador ...
                 });
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -339,19 +342,18 @@ public class CincuentazoGameController implements Initializable {
 
         humanHandContainer.getChildren().clear();
 
-        Player human = game.currentPlayer(); // the first one (you)
+        Player human = game.getHumanPlayer(); // <- cambio importante
+        if (human == null) return;
         List<Card> hand = human.getHand();
 
         for (int i = 0; i < hand.size(); i++) {
             Card card = hand.get(i);
 
-            // Cargar imagen (usa tus recursos reales, por ejemplo /Cards/A.png, etc.)
             ImageView img = new ImageView();
             try {
-                String path = "/com/example/demomvc/Cards/" + card.getSymbol() + ".png";
+                String path = "/com/example/demomvc/Cards/" + card.getImageFileName();
                 img.setImage(new Image(getClass().getResourceAsStream(path)));
             } catch (Exception e) {
-                // Si no hay imagen, usa texto temporal
                 img.setImage(new Image(getClass().getResourceAsStream("/com/example/demomvc/Cards/back.png")));
             }
 
@@ -359,19 +361,20 @@ public class CincuentazoGameController implements Initializable {
             img.setFitHeight(120);
             img.setPreserveRatio(true);
 
-            final int index = i;
-            img.setOnMouseClicked(e -> handleHumanPlay(index));
+            img.setUserData(card); // asocia la carta actual (objeto) al ImageView
+
+            img.setOnMouseClicked(e -> handleHumanPlay((Card) img.getUserData()));
 
             humanHandContainer.getChildren().add(img);
         }
     }
 
-    private void handleHumanPlay(int index) {
+    private void handleHumanPlay(Card selectedCard) {
         if (game == null) return;
 
-        boolean played = game.playHumanCard(index);
+        boolean played = game.playHumanCard(selectedCard);
         if (played) {
-            displayHumanHand(); // Refresh hand
+            displayHumanHand(); // Refresh the hand
         } else {
             System.out.println("You cannot play that card (would exceed 50).");
         }
