@@ -437,33 +437,33 @@ public class CincuentazoGameController implements Initializable {
     private void displayBotHands() {
         if (tableArea == null) return;
 
-        tableArea.getChildren().clear(); // Limpia dorsos anteriores
+        tableArea.getChildren().clear();
 
         Image backImage = new Image(getClass().getResourceAsStream("/com/example/demomvc/Cards/back.png"));
+
+        double spacing = 25;
 
         for (int botIndex = 1; botIndex <= numberOfBots; botIndex++) {
             for (int cardIndex = 0; cardIndex < 4; cardIndex++) {
                 ImageView backCard = new ImageView(backImage);
-                backCard.setFitWidth(60);
-                backCard.setFitHeight(90);
+                backCard.setFitWidth(70);
+                backCard.setFitHeight(100);
                 backCard.setPreserveRatio(true);
 
-                double spacing = 22;
-
                 switch (botIndex) {
-                    case 1 -> { // Superior
-                        backCard.setLayoutX(180 + cardIndex * spacing);
-                        backCard.setLayoutY(40);
+                    case 1 -> { // Bot superior
+                        backCard.setLayoutX(89 + cardIndex * spacing);
+                        backCard.setLayoutY(-70);
                     }
-                    case 2 -> { // Izquierda
+                    case 2 -> { // Bot izquierdo
                         backCard.setRotate(90);
-                        backCard.setLayoutX(80);
-                        backCard.setLayoutY(150 + cardIndex * spacing);
+                        backCard.setLayoutX(-60);
+                        backCard.setLayoutY(50 + cardIndex * spacing);
                     }
-                    case 3 -> { // Derecha
+                    case 3 -> { // Bot derecho
                         backCard.setRotate(270);
-                        backCard.setLayoutX(380);
-                        backCard.setLayoutY(150 + cardIndex * spacing);
+                        backCard.setLayoutX(310);
+                        backCard.setLayoutY(50 + cardIndex * spacing);
                     }
                 }
 
