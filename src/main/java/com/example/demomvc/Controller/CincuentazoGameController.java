@@ -17,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.HBox;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
@@ -99,6 +100,8 @@ public class CincuentazoGameController implements Initializable {
     private long pausedTime = 0;
     @FXML
     private Label lblCurrentSum;
+    @FXML
+    private Pane tableArea;
 
 
     // 1. INICIALIZACIÓN Y CONEXIÓN DE EVENTOS
@@ -300,6 +303,8 @@ public class CincuentazoGameController implements Initializable {
 
         displayHumanHand();
 
+        displayBotHands();
+
         game.setOnSumChanged(() -> {
             if (lblCurrentSum != null) {
                 int sum = game.getTableSum();
@@ -426,6 +431,44 @@ public class CincuentazoGameController implements Initializable {
 
         } else {
             System.out.println("You cannot play that card (would exceed 50).");
+        }
+    }
+
+    private void displayBotHands() {
+        if (tableArea == null) return;
+
+        tableArea.getChildren().clear(); // Limpia dorsos anteriores
+
+        Image backImage = new Image(getClass().getResourceAsStream("/com/example/demomvc/Cards/back.png"));
+
+        for (int botIndex = 1; botIndex <= numberOfBots; botIndex++) {
+            for (int cardIndex = 0; cardIndex < 4; cardIndex++) {
+                ImageView backCard = new ImageView(backImage);
+                backCard.setFitWidth(60);
+                backCard.setFitHeight(90);
+                backCard.setPreserveRatio(true);
+
+                double spacing = 22;
+
+                switch (botIndex) {
+                    case 1 -> { // Superior
+                        backCard.setLayoutX(180 + cardIndex * spacing);
+                        backCard.setLayoutY(40);
+                    }
+                    case 2 -> { // Izquierda
+                        backCard.setRotate(90);
+                        backCard.setLayoutX(80);
+                        backCard.setLayoutY(150 + cardIndex * spacing);
+                    }
+                    case 3 -> { // Derecha
+                        backCard.setRotate(270);
+                        backCard.setLayoutX(380);
+                        backCard.setLayoutY(150 + cardIndex * spacing);
+                    }
+                }
+
+                tableArea.getChildren().add(backCard);
+            }
         }
     }
 }
