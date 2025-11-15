@@ -57,13 +57,27 @@ public class Game {
             }
         }
 
-        // No colocar carta inicial en la mesa, comienza en 0
-        tablePile.clear();
-        tableSum = 0;
+        // Sacar una carta inicial aleatoria (que no sea J, Q, K)
+        Card startCard;
+        do {
+            startCard = deck.drawCard();
+        } while (startCard.getValue(false) < 0); // evita negativos (J, Q, K)
 
-        System.out.println("Game started. Table sum = 0");
+        tablePile.clear();
+        tablePile.add(startCard);
+        tableSum = computeCardValue(startCard, 0);
+
+        System.out.println("Game started. Table sum = " + tableSum);
+
+        // Notificar al controlador para que la muestre en la mesa
+        if (onCardPlayed != null) {
+            Card finalStartCard = startCard;
+            javafx.application.Platform.runLater(() -> onCardPlayed.accept(finalStartCard));
+        }
+
         currentPlayerIndex = 0;
     }
+
 
     public Player getHumanPlayer() {
         if (players.isEmpty()) return null;
